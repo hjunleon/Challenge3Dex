@@ -103,14 +103,15 @@ describe("🚩 Challenge 3: ⚖️ 🪙 Simple DEX", function () {
             value: ethers.utils.parseEther("1"),
           });
           // TODO: SYNTAX - Figure out how to read eth balance of dex contract and to compare it against the eth sent in via this tx. Also figure out why/how to read the event that should be emitted with this too.
-
+          const balance = await ethers.provider.getBalance(dexContract.address);
+          console.log(`balance: ${balance}`)
           expect(
-            await ethers.BigNumber.from(dexContract.address.balance)
+            await ethers.BigNumber.from(balance)
           ).to.equal(ethers.utils.parseEther("6"));
 
-          // await expect(tx1)
-          //   .emit(dexContract, "EthToTokenSwap")
-          //   .withArgs(user2.address, __, ethers.utils.parseEther("1"));
+          await expect(tx1)
+            .emit(dexContract, "EthToTokenSwap")
+            .withArgs(user2.address, __, ethers.utils.parseEther("1"));
         });
 
         it("Should send less tokens after the first trade (ethToToken called)", async function () {
@@ -138,7 +139,7 @@ describe("🚩 Challenge 3: ⚖️ 🪙 Simple DEX", function () {
             .connect(deployer.signer)
             .tokenToEth(ethers.utils.parseEther("1"));
           let tx1 = await dexContract
-            .connect(deployer.sign
+            .connect(deployer.signer)
             .tokenToEth(ethers.utils.parseEther("1"));
 
           //TODO: SYNTAX - write an expect that takes into account the emitted event from tokenToETH.
